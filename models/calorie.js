@@ -1,3 +1,6 @@
+// Chen Moasis 318912805
+// Gali Seregin 322060187
+
 const mongoose = require('mongoose');
 
 const calorieSchema = new mongoose.Schema({

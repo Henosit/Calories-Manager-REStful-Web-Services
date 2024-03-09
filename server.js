@@ -1,27 +1,29 @@
 // Chen Moasis 318912805
 // Gali Seregin 322060187
 
+// Importing required modules
 require('dotenv').config();
-
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const PORT = 3000;
 
+// Connecting to the database
 mongoose.connect(process.env.DATABASE_URL)
-    .then( () => {
-        console.log('Connected to the database ')
+    .then(() => {
+        console.log('Connected to the database');
     })
-    .catch( (err) => {
+    .catch((err) => {
         console.error(`Error connecting to the database. n${err}`);
-    })
+    });
 
+// Middleware to parse JSON
 app.use(express.json());
 
-const usersRouter = require('./routes/users');
-const User = require("./models/user");
+// Importing Calorie model
 const Calorie = require("./models/calorie");
-app.use('/users', usersRouter);
+
+// About route to display developers' information
 app.get('/about', (req, res) => {
     // Array of objects describing developers
     const developers = [
@@ -31,6 +33,7 @@ app.get('/about', (req, res) => {
     res.json(developers);
 });
 
+// Route to add calorie consumption
 app.post('/addcalories', async (req, res) => {
     const calorie = new Calorie({
         user_id: req.body.user_id,
@@ -48,10 +51,11 @@ app.post('/addcalories', async (req, res) => {
         res.status(201).json(newCalorie);
     } catch (err) {
         // 400 for bad request
-        res.status(400).json({message: err.message});
+        res.status(400).json({ message: err.message });
     }
-})
+});
 
+// Route to generate calorie consumption report
 app.get('/report', async (req, res) => {
     try {
         // Extract parameters from the request query
@@ -89,4 +93,5 @@ app.get('/report', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {console.log(`Server is running at: http://localhost:${PORT}`)});
+// Start the server
+app.listen(PORT, () => { console.log(`Server is running at: http://localhost:${PORT}`) });

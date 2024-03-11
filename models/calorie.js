@@ -12,15 +12,21 @@ const calorieSchema = new mongoose.Schema({
     },
     year: {
         type: Number,
-        required: true
+        required: true,
+        min: 1900, // Assuming a minimum year
+        max: 2100 // Assuming a maximum year
     },
     month: {
         type: Number,
-        required: true
+        required: true,
+        min: 1,
+        max: 12
     },
     day: {
         type: Number,
-        required: true
+        required: true,
+        min: 1,
+        max: 31
     },
     description: {
         type: String,
@@ -33,7 +39,8 @@ const calorieSchema = new mongoose.Schema({
     },
     amount: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
 });
 

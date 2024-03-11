@@ -4,6 +4,7 @@
 // Importing required modules
 require('dotenv').config();
 const express = require('express');
+const { body, validationResult, query } = require('express-validator');
 const app = express();
 const mongoose = require('mongoose');
 const PORT = 3000;
@@ -34,7 +35,22 @@ app.get('/about', (req, res) => {
 });
 
 // Route to add calorie consumption
-app.post('/addcalories', async (req, res) => {
+app.post('/addcalories', [
+    // Define validation rules using express-validator
+    body('user_id').isNumeric(),
+    body('year').isInt({ min: 1900, max: 2100 }),
+    body('month').isInt({ min: 1, max: 12 }),
+    body('day').isInt({ min: 1, max: 31 }),
+    body('description').notEmpty(),
+    body('category').notEmpty(),
+    body('amount').isInt({ min: 0 })
+], async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const calorie = new Calorie({
         user_id: req.body.user_id,
         year: req.body.year,
@@ -56,7 +72,18 @@ app.post('/addcalories', async (req, res) => {
 });
 
 // Route to generate calorie consumption report
-app.get('/report', async (req, res) => {
+app.get('/report', [
+    // Define validation rules using express-validator
+    query('user_id').isNumeric(),
+    query('year').isInt({ min: 1900, max: 2100 }),
+    query('month').isInt({ min: 1, max: 12 }),
+], async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         // Extract parameters from the request query
         const { year, month, user_id } = req.query;

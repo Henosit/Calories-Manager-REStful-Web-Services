@@ -102,12 +102,8 @@ app.get('/report', [
         // Group calorie consumption items by category
         calories.forEach(calorie => {
             report[calorie.category].push({
-                user_id: calorie.user_id,
-                year: calorie.year,
-                month: calorie.month,
                 day: calorie.day,
                 description: calorie.description,
-                category: calorie.category,
                 amount: calorie.amount
             });
         });
